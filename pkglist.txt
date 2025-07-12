@@ -1,0 +1,6 @@
+rofi
+waybar
+hyprpaper
+fastfetch
+firefox
+nemo
