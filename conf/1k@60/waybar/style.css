@@ -5,6 +5,8 @@
   min-height: 0;
   border: none;
   font-weight: bold;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 #workspaces{
@@ -25,6 +27,7 @@
   background-color: #181825;
   transition-property: background-color;
   transition-duration: 0.5s;
+  border-radius: 7px;
 }
 
 #window,
@@ -98,7 +101,7 @@
   /* Fix weird spacing in materia (waybar #450) */
   box-shadow: inset 0 -3px transparent;
   /* Use box-shadow instead of border so the text isn't offset */
-  padding: 6px 18px;
+  padding: 6px 10px;
   margin: 6px 3px;
   border-radius: 4px;
   background-color: rgba(36, 36, 52, 1.0);

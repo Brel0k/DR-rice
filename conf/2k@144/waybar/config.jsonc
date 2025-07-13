@@ -2,7 +2,8 @@
   "layer": "top",
   "position": "top",
   "height": 45,
-  "spacing": 0,
+  "margin": "10 10 10 10",
+  "spacing": 1,
   "modules-left": [
     "hyprland/workspaces",
     "tray",
@@ -42,23 +43,23 @@
   "format": "  ",
   "on-click": "hyprlock",
   "tooltip": true,
-  "tooltip-format": "锁屏"
+  "tooltip-format": "Lock"
   },
   "custom/reboot": {
     "format": "  ",
     "on-click": "systemctl reboot",
     "tooltip": true,
-    "tooltip-format": "重启"
+    "tooltip-format": "Reboot"
   },
   "custom/power": {
     "format": "  ",
     "on-click": "systemctl poweroff",
     "tooltip": true,
-    "tooltip-format": "关机"
+    "tooltip-format": "Shutdown"
   },
   "network": {
     "format-wifi": " 󰤨  {essid} ",
-    "format-ethernet": "   Wired ",
+    "format-ethernet": "  Wired ",
     "tooltip-format": "<span color='#FF1493'> 󰅧  </span>{bandwidthUpBytes}  <span color='#00BFFF'> 󰅢  </span>{bandwidthDownBytes}",
     "format-linked": " 󱘖  {ifname} (No IP) ",
     "format-disconnected": "   Disconnected ",
@@ -78,7 +79,7 @@
   },
   "pulseaudio": {
     "format": "{icon} {volume}% ",
-    "format-muted": " 󰖁 0% ",
+    "format-muted": " 󰖁  0% ",
     "format-icons": {
       "headphone": "  ",
       "hands-free": "  ",
@@ -95,19 +96,19 @@
     "on-click-right": "pavucontrol -t 3",
     "on-click": "pactl -- set-sink-mute 0 toggle",
     "tooltip": true,
-    "tooltip-format": "当前系统声音: {volume}%"
+    "tooltip-format": "Volume: {volume}%"
   },
   "custom/temperature": {
     "exec": "sensors | awk '/^Package id 0:/ {print int($4)}'",
     "format": "  {}°C ",
     "interval": 5,
     "tooltip": true,
-    "tooltip-format": "当前 CPU 温度: {}°C"
+    "tooltip-format": "Cpu: {}°C"
   },
   "memory": {
-    "format": "   {used:0.1f}G/{total:0.1f}G ",
+    "format": "   {used:0.1f}G ",
     "tooltip": true,
-    "tooltip-format": "当前内存占比: {used:0.2f}G/{total:0.2f}G"
+    "tooltip-format": "Ram used: {used:0.2f}G/{total:0.2f}G"
   },
   "cpu": {
     "format": "   {usage}% ",
@@ -118,7 +119,7 @@
     "timezone": "Asia/Chengdu",
     "format": "   {:%H:%M} ",
     "tooltip": true,
-    "tooltip-format": "{:L%Y 年 %m 月 %d 日, %A}"
+    "tooltip-format": "{:L%Y %m %d %A}"
   },
   "tray": {
     "icon-size": 17,
@@ -128,7 +129,7 @@
     "device": "intel_backlight",
     "format": "{icon} {percent}% ",
     "tooltip": true,
-    "tooltip-format": "当前屏幕亮度: {percent}%",
+    "tooltip-format": "Light: {percent}%",
     "format-icons": [
       " 󰃞 ",  // 暗 - 深灰
       " 󰃝 ",  // 中 - 灰
