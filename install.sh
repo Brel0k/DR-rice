@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Проверка и установка прав на выполнение для самого скрипта
+# Автоматическая установка прав для скрипта
 if [ ! -x "$0" ]; then
-    echo "Устанавливаем права на выполнение для install.sh..."
-    chmod +x "$0" 2>/dev/null || { echo "Не удалось установить права на выполнение"; exit 1; }
+    echo "Устанавливаем права на выполнение..."
+    chmod +x "$0" 2>/dev/null || { echo "Ошибка установки прав"; exit 1; }
     exec "$0" "$@"
     exit $?
 fi
@@ -45,6 +45,7 @@ set_language() {
     case $LANG_CHOICE in
         0) # Русский
             MSG_FONTS="Установка шрифтов..."
+            MSG_PKGLIST="Установка пакетов из pkglist.txt"
             MSG_BASHRC="Настройка .bashrc"
             MSG_RESOLUTION="Выберите разрешение монитора:"
             MSG_REFRESH="Выберите частоту обновления:"
@@ -52,6 +53,7 @@ set_language() {
             MSG_GRUB_RES="Выберите разрешение для темы GRUB:"
             MSG_COMPLETE="Установка завершена успешно!"
             MSG_GRUB_PERM="Установка прав для скриптов GRUB..."
+            MSG_CONFIG_COPY="Копирование конфигурации монитора"
             OPT_1K="1k (1920x1080)"
             OPT_2K="2k (2560x1440)"
             OPT_60Hz="60Hz"
@@ -61,6 +63,7 @@ set_language() {
             ;;
         1) # English
             MSG_FONTS="Installing fonts..."
+            MSG_PKGLIST="Installing packages from pkglist.txt"
             MSG_BASHRC="Configuring .bashrc"
             MSG_RESOLUTION="Select monitor resolution:"
             MSG_REFRESH="Select refresh rate:"
@@ -68,6 +71,7 @@ set_language() {
             MSG_GRUB_RES="Select resolution for GRUB theme:"
             MSG_COMPLETE="Installation completed successfully!"
             MSG_GRUB_PERM="Setting execute permissions for GRUB scripts..."
+            MSG_CONFIG_COPY="Copying monitor configuration"
             OPT_1K="1k (1920x1080)"
             OPT_2K="2k (2560x1440)"
             OPT_60Hz="60Hz"
@@ -147,16 +151,31 @@ install_fonts() {
     sleep 1
 }
 
+install_packages() {
+    clear
+    echo -e "\033[1;34m$MSG_PKGLIST\033[0m"
+    
+    if [ -f "pkglist.txt" ]; then
+        echo -e "\033[1;33m• Установка пакетов...\033[0m"
+        sudo pacman -S --needed - < pkglist.txt
+        echo -e "\033[1;32m✓ Пакеты установлены\033[0m"
+    else
+        echo -e "\033[1;31mФайл pkglist.txt не найден\033[0m"
+        exit 1
+    fi
+    sleep 1
+}
+
 install_bashrc() {
     clear
     echo -e "\033[1;34m$MSG_BASHRC\033[0m"
     
     if [ -f "conf/.bashrc" ]; then
-        echo -e "\033[1;33m• Копирование .bashrc в ~/.bashrc...\033[0m"
+        echo -e "\033[1;33m• Копирование .bashrc...\033[0m"
         cp -f "conf/.bashrc" "$HOME/.bashrc"
-        echo -e "\033[1;32m✓ .bashrc успешно настроен\033[0m"
+        echo -e "\033[1;32m✓ .bashrc настроен\033[0m"
     else
-        echo -e "\033[1;33m• Файл conf/.bashrc не найден, пропускаем...\033[0m"
+        echo -e "\033[1;33m• Файл conf/.bashrc не найден\033[0m"
     fi
     sleep 1
 }
@@ -164,11 +183,14 @@ install_bashrc() {
 copy_configs() {
     local config_dir=$1
     
-    echo -e "\033[1;33m• Копирование конфигов в ~/.config/...\033[0m"
+    clear
+    echo -e "\033[1;34m$MSG_CONFIG_COPY: $config_dir\033[0m"
+    
     if [ -d "conf/$config_dir" ]; then
+        echo -e "\033[1;33m• Копирование с заменой в ~/.config/\033[0m"
         mkdir -p "$HOME/.config"
         cp -rf "conf/$config_dir"/* "$HOME/.config/"
-        echo -e "\033[1;32m✓ Конфиги для $config_dir скопированы\033[0m"
+        echo -e "\033[1;32m✓ Конфигурация $config_dir установлена\033[0m"
     else
         echo -e "\033[1;31mПапка conf/$config_dir не найдена\033[0m"
         exit 1
@@ -188,7 +210,6 @@ select_resolution() {
         [ $hz_choice -eq 0 ] && config_dir="2k@60" || config_dir="2k@144"
     fi
     
-    echo -e "\033[1;32m✓ Выбрано: $config_dir\033[0m"
     copy_configs "$config_dir"
 }
 
@@ -229,6 +250,7 @@ install_grub() {
 main() {
     set_language
     install_fonts
+    install_packages
     install_bashrc
     select_resolution
     install_grub
